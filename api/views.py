@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from django.core.serializers import serialize
-from api.models import Address
-from api.serializers import AddressSerializer
+from api.models import Address, Position
+from api.serializers import AddressSerializer,PositionSerializer
 import json
 # Create your views here.
 
@@ -27,22 +27,30 @@ def get_all_address(request):
     serializer = AddressSerializer(address, many=True)
     return Response(serializer.data)
 
-def tratamento(data_x, data_y, point_x, point_y):
-    data_x = data_x
-    data_y = data_y
-    point_x = point_x
-    point_y = point_y
-    dmax = point_x - point_y
-    dist_x = data_x - point_x
-    dist_y = data_y - point_y
-    sum_dist = dist_x + dist_y
-    if sum_dist <= dmax:
-        print("passou")
-    else:
-        print("não passou")
 
-@api_view(['POST'])
-def verify(request):
-    if request.method == "GET":
-        raise APIException('Não tem permissões para GET', 500)
-    pass
+
+@api_view(["POST"])
+def get_location(request):
+
+    data = request.data
+
+    position_x = data['x']
+    position_y = data['y']
+
+    d_max = abs(position_x - position_y)
+
+    address = Address.objects.all()
+    serializer = AddressSerializer(address, many=True)
+    serializer = serializer.data
+
+    lista_resultado = []
+    
+    for objeto in serializer:
+        lista = [objeto['name']]
+        x = abs(objeto['x'] - position_x)
+        y =abs(objeto['y'] - position_y)
+        soma_x_y = x + y
+        if soma_x_y <= d_max:
+            lista_resultado.append(lista)
+   
+    return Response(f'{lista_resultado}')
