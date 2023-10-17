@@ -37,6 +37,3 @@ retornar os seguintes POIs:
   referência, bem como uma distância máxima (d-max) em metros. O serviço deverá retornar todos os POIs da base de dados
   que estejam a uma distância menor ou igual a d-max a partir do ponto de referência.
 
-## Soluções
-
-Neste [tópico](SOLUTIONS.md), você encontrará soluções para esse desafio, feitas por outros membros da comunidade.
