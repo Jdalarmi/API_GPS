@@ -1,16 +1,26 @@
-from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from django.core.serializers import serialize
 from api.models import Address, Position
 from api.serializers import AddressSerializer,PositionSerializer
-import json
+from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
 
+@swagger_auto_schema(method='post', request_body=AddressSerializer)
 @api_view(['POST'])
 def register_address(request):
+    """
+    Exemplo de corpo da requisição:
+
+    {
+        "nome": "Nome do estabelecimento",
+        "x": "Cordenada x",
+        "y": "Crodenada y"
+    }
+    """
     if request.method == 'GET':
         raise APIException(403, 'Sem acesso get')
     
@@ -28,14 +38,23 @@ def get_all_address(request):
     return Response(serializer.data)
 
 
-
+@swagger_auto_schema(method='post', request_body=PositionSerializer)
 @api_view(["POST"])
 def get_location(request):
 
+    """
+    Exemplo de corpo da requisição:
+
+    {
+        "campo X": "Cordenada x",
+        "campo y": "Cordenada y
+    }
+    """
+
     data = request.data
 
-    position_x = data['x']
-    position_y = data['y']
+    position_x = data['position_x']
+    position_y = data['position_y']
 
     d_max = abs(position_x - position_y)
 
@@ -52,5 +71,6 @@ def get_location(request):
         soma_x_y = x + y
         if soma_x_y <= d_max:
             lista_resultado.append(lista)
+        
    
-    return Response(f'{lista_resultado}')
+    return Response(lista_resultado, status=status.HTTP_200_OK)
