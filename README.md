@@ -1,4 +1,14 @@
-# Pontos de Interesse por GPS
+# Para usar a API e testar você pode acessar ela documentada com swagger no link abaixo:
+[acesse](https://jefe.pythonanywhere.com/swagger/)
+# Uma breve descrição de como usar seguindo o que pede os desafio para API:
+- /get_all/ é função para você listar todos os pontos já cadastrados na API.
+  
+- /get_location/ você deve passar as cordenadas de X e Y igual corpo da requisição pede para que seja feito o processamento dentro da base de dados
+  e devolva a resposta dos lugares que estão até no maximo 10 metros de distancia.
+  
+- /register/ você pode registrar um ponto de interesse novo com nome e as cordenadas X e Y, tambem conforme o corpo da requisição 
+
+# Desafio para criar a API - Pontos de Interesse por GPS
 
 Seu desafio será implementar um serviço para a empresa XY Inc., especializada na produção de excelentes receptores
 GPS (Global Positioning System).
@@ -7,7 +17,7 @@ interesse (POIs), e precisa muito de sua ajuda.
 Você foi contratado para desenvolver a plataforma que fornecerá toda a inteligência ao dispositivo. Esta plataforma deve
 ser baseada em serviços REST, para flexibilizar a integração.
 
-## Exemplo
+## Exemplo de inserção no banco de dados:
 
 Considere a seguinte base de dados de POIs:
 
