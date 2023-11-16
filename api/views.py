@@ -1,13 +1,12 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
-from django.core.serializers import serialize
+from django.http import JsonResponse
 from api.models import Address, Position
 from api.serializers import AddressSerializer,PositionSerializer
 from drf_yasg.utils import swagger_auto_schema
-# Create your views here.
+
 
 @swagger_auto_schema(method='post', request_body=AddressSerializer)
 @api_view(['POST'])
@@ -56,6 +55,7 @@ def get_location(request):
     position_x = data['position_x']
     position_y = data['position_y']
 
+
     d_max = abs(position_x - position_y)
 
     address = Address.objects.all()
@@ -74,3 +74,15 @@ def get_location(request):
         
    
     return Response(lista_resultado, status=status.HTTP_200_OK)
+
+@swagger_auto_schema(method='put')
+@api_view(['PUT'])
+def delete_by_id(request, pk):
+    if request.method != 'PUT':
+        return JsonResponse({'error': 'Metodo não permitido'}, status.HTTP_400_BAD_REQUEST)
+    try:
+        address = Address.objects.get(id=pk)
+        address.delete()
+        return Response(f'Endereço foi deletado com sucesso!', status=200)
+    except Address.DoesNotExist:
+        return Response('Esse endereço não se encontra na base de dados', status=500)
