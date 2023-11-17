@@ -1,12 +1,13 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from django.http import JsonResponse
 from api.models import Address, Position
 from api.serializers import AddressSerializer,PositionSerializer
-from drf_yasg.utils import swagger_auto_schema
-
+from rest_framework.permissions import IsAuthenticated
+from drf_yasg import openapi
 
 @swagger_auto_schema(method='post', request_body=AddressSerializer)
 @api_view(['POST'])
@@ -20,6 +21,7 @@ def register_address(request):
         "y": "Crodenada y"
     }
     """
+
     if request.method == 'GET':
         raise APIException(403, 'Sem acesso get')
     
@@ -30,7 +32,20 @@ def register_address(request):
     
     return Response("Invalid")
 
+@swagger_auto_schema(
+    method='get',
+    manual_parameters=[
+        openapi.Parameter(
+            name='Authorization',
+            in_=openapi.IN_HEADER,
+            type=openapi.TYPE_STRING,
+            description='Bearer your_token_here',
+            required=True,
+        ),
+    ],
+)
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_all_address(request):
     address = Address.objects.all()
     serializer = AddressSerializer(address, many=True)
