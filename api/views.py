@@ -5,9 +5,11 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from django.http import JsonResponse
 from api.models import Address, Position
-from api.serializers import AddressSerializer,PositionSerializer
+from api.serializers import AddressSerializer,PositionSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 @swagger_auto_schema(method='post', request_body=AddressSerializer)
 @api_view(['POST'])
@@ -101,3 +103,19 @@ def delete_by_id(request, pk):
         return Response(f'Endereço foi deletado com sucesso!', status=200)
     except Address.DoesNotExist:
         return Response('Esse endereço não se encontra na base de dados', status=500)
+    
+
+@swagger_auto_schema(method='post', request_body=UserSerializer)
+@api_view(["POST"])   
+def create_user(request):
+    if request.method == 'POST':
+        user = UserSerializer(data=request.data)
+        if user.is_valid():
+            user.validated_data['password'] = make_password(request.data['password'])
+            user = user.save()
+            user.is_superuser = True
+            user.save()
+
+            return Response(user.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)       
