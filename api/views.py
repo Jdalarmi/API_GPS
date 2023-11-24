@@ -28,7 +28,7 @@ def register_address(request):
     serializer = AddressSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=201)
+        return Response('Endereço cadastrado com sucesso!', status=201)
     
     return Response("Invalid")
 
