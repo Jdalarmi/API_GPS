@@ -1,5 +1,4 @@
-# Para usar a API e testar você pode acessar ela documentada com swagger no link abaixo:
-[https://jefe.pythonanywhere.com/swagger/]
+
 # Uma breve descrição de como usar seguindo o que pede o desafio para API:
 
 - /get_all/ é função para você listar todos os pontos já cadastrados na API.
